@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+---
+
+<Base
+  title="Sobre Calcula Obra — Metodología y alcance"
+  description="Qué calcula Calcula Obra, de dónde salen los rendimientos de materiales y cuáles son sus límites."
+>
+  <div class="container page">
+    <h1>Sobre Calcula Obra</h1>
+    <p>
+      Calcula Obra reúne calculadoras de materiales de construcción para Perú: ladrillos, cemento,
+      pintura y losetas. Todas funcionan en el navegador, sin registro y sin enviar tus medidas a
+      ningún servidor.
+    </p>
+
+    <h2>Metodología</h2>
+    <p>
+      Los cálculos usan dimensiones comerciales de los materiales y rendimientos típicos de obra.
+      Para los ladrillos se considera una junta de 1.5 cm; para el concreto, dosificaciones
+      referenciales por resistencia; para la pintura, un rendimiento de 10 m² por litro y mano.
+    </p>
+    <p>
+      Cada calculadora permite ajustar el desperdicio. Ese porcentaje cubre cortes, roturas y
+      diferencias de medición.
+    </p>
+
+    <h2>Límites</h2>
+    <p>
+      Los resultados son referenciales. No reemplazan un expediente técnico, un presupuesto de obra ni
+      la asesoría de un ingeniero o maestro de obra. El rendimiento real depende de la calidad del
+      material, la superficie y la mano de obra.
+    </p>
+
+    <h2>Contacto</h2>
+    <p>
+      ¿Falta una calculadora o encontraste un error? Escríbenos desde la página de
+      <a href={url('contacto/')}>contacto</a>.
+    </p>
+  </div>
+</Base>

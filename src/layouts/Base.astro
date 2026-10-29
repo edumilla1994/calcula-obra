@@ -1,0 +1,88 @@
+---
+import '../styles/global.css';
+import AdSlot from '../components/AdSlot.astro';
+import Analytics from '../components/Analytics.astro';
+
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
+const path = Astro.url.pathname.replace(/\/$/, '');
+const esHome = path === base.replace(/\/$/, '');
+---
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#7c2d12" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_PE" />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    {gsc && <meta name="google-site-verification" content={gsc} />}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header class="site-header">
+      <div class="container bar">
+        <a class="brand" href={url('')}>
+          <span class="mark">m²</span>
+          Calcula Obra
+        </a>
+        <nav class="nav" aria-label="Principal">
+          <a href={url('ladrillos/')}>Ladrillos</a>
+          <a href={url('cemento/')}>Cemento</a>
+          <a href={url('pintura/')}>Pintura</a>
+          <a href={url('losetas/')}>Losetas</a>
+          <a href={url('') + '#calculadoras'}>Ver todas</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    {!esHome && <AdSlot />}
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <strong>Calcula Obra</strong>
+          <p style="margin:8px 0 0;max-width:330px">
+            Calculadoras de materiales de construcción para Perú: ladrillos, cemento, pintura y
+            acabados. Gratis y sin registro.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Calculadoras</h4>
+          <a href={url('ladrillos/')}>Ladrillos</a>
+          <a href={url('cemento/')}>Cemento y concreto</a>
+          <a href={url('pintura/')}>Pintura</a>
+          <a href={url('losetas/')}>Losetas</a>
+        </div>
+        <div class="footer-col">
+          <h4>Sitio</h4>
+          <a href={url('sobre/')}>Sobre el sitio</a>
+          <a href={url('privacidad/')}>Privacidad</a>
+          <a href={url('contacto/')}>Contacto</a>
+        </div>
+      </div>
+      <div class="container disclaimer">
+        Los cálculos son referenciales y no reemplazan un expediente técnico, un presupuesto de obra ni
+        la asesoría de un ingeniero o maestro de obra. Verifica rendimientos y precios antes de comprar.
+        © 2026 Calcula Obra.
+      </div>
+    </footer>
+
+    <Analytics />
+  </body>
+</html>

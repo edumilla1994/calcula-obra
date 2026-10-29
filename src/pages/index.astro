@@ -1,0 +1,243 @@
+---
+import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { fmt } from '../lib/obra';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+
+const svg = (paths) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+
+const tools = [
+  {
+    href: 'ladrillos/',
+    name: 'Ladrillos',
+    cat: 'materiales',
+    desc: 'Cuántos ladrillos o bloques necesitas para tu pared, con junta y desperdicio.',
+    icon: svg('<rect x="3" y="5" width="8" height="5" rx="1"/><rect x="13" y="5" width="8" height="5" rx="1"/><rect x="8" y="14" width="8" height="5" rx="1"/>'),
+  },
+  {
+    href: 'cemento/',
+    name: 'Cemento y concreto',
+    cat: 'materiales',
+    desc: 'Bolsas de cemento, arena, piedra y agua para tu vaciado.',
+    icon: svg('<path d="M7 3h10l2 4v14H5V7z"/><path d="M5 7h14M9 3v4M15 3v4"/>'),
+  },
+  {
+    href: 'pintura/',
+    name: 'Pintura',
+    cat: 'acabados',
+    desc: 'Litros y galones según el área, las manos y el rendimiento.',
+    icon: svg('<rect x="4" y="3" width="12" height="6" rx="1"/><path d="M10 9v4h4v8h-4z"/>'),
+  },
+  {
+    href: 'losetas/',
+    name: 'Losetas',
+    cat: 'acabados',
+    desc: 'Unidades y cajas de porcelanato o cerámica por metro cuadrado.',
+    icon: svg('<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/>'),
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Calcula Obra',
+  url: new URL(base, Astro.site).href,
+  description: 'Calculadoras de materiales de construcción para Perú.',
+  inLanguage: 'es-PE',
+};
+---
+
+<Base
+  title="Calcula Obra — Ladrillos, cemento, pintura y losetas"
+  description="Calcula cuántos ladrillos, bolsas de cemento, galones de pintura o cajas de losetas necesitas. Gratis, sin registro y con rendimientos reales."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="badge">Materiales · Perú 2026</span>
+        <h1>Calcula tus materiales antes de comprar.</h1>
+        <p>
+          Ladrillos, cemento, pintura y losetas con el desperdicio incluido. Evita comprar de más
+          y evita quedarte corto a mitad de la obra.
+        </p>
+        <ul class="hero-trust">
+          <li>4 calculadoras</li>
+          <li>Desperdicio incluido</li>
+          <li>100% gratis</li>
+        </ul>
+      </div>
+
+      <div class="quick-calc" aria-labelledby="quick-title">
+        <div class="quick-head">
+          <strong id="quick-title">Calculadora rápida</strong>
+          <span class="quick-live">En vivo</span>
+        </div>
+        <label for="q-area">Área a pintar (m²)</label>
+        <input id="q-area" name="area" type="number" inputmode="decimal" min="0" step="1" value="40" autocomplete="off" />
+        <label for="q-manos">Manos de pintura</label>
+        <select id="q-manos" name="manos">
+          <option value="1">1 mano</option>
+          <option value="2" selected>2 manos</option>
+          <option value="3">3 manos</option>
+        </select>
+        <div class="quick-result" aria-live="polite">
+          <span>Necesitas aproximadamente</span>
+          <strong id="q-galones">2.22 galones</strong>
+          <small id="q-litros">8.40 litros · rendimiento 10 m²/L por mano</small>
+        </div>
+        <a class="btn gold quick-btn" href={url('pintura/')}>
+          Ver el cálculo completo
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container search-section">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-3.2-3.2"></path>
+      </svg>
+      <label class="sr-only" for="calc-search">Buscar calculadora</label>
+      <input id="calc-search" type="search" placeholder="Busca: ladrillos, cemento, pintura…" autocomplete="off" />
+    </div>
+    <div class="filters" role="group" aria-label="Filtrar por categoría">
+      <button class="filter is-active" type="button" data-filter="todas">Todas <span>4</span></button>
+      <button class="filter" type="button" data-filter="materiales">Materiales <span>2</span></button>
+      <button class="filter" type="button" data-filter="acabados">Acabados <span>2</span></button>
+    </div>
+    <p class="search-count" id="search-count" aria-live="polite">4 calculadoras disponibles</p>
+  </section>
+
+  <section class="container" id="calculadoras">
+    <div class="grid" id="calc-grid">
+      {tools.map((t, i) => (
+        <a class="card" href={url(t.href)} data-name={t.name.toLowerCase() + ' ' + t.desc.toLowerCase()} data-cat={t.cat}>
+          <div class="card-top">
+            <span class="card-icon" set:html={t.icon} />
+            <span class="card-index">{String(i + 1).padStart(2, '0')}</span>
+          </div>
+          <h2>{t.name}</h2>
+          <p>{t.desc}</p>
+          <span class="card-link">Calcular ahora <span aria-hidden="true">→</span></span>
+        </a>
+      ))}
+    </div>
+    <p class="empty" id="calc-empty" hidden>No encontramos esa calculadora. Prueba con «ladrillo», «cemento» o «pintura».</p>
+  </section>
+
+  <AdSlot />
+
+  <section class="container trust">
+    <div class="trust-item">
+      <strong>Rendimientos reales</strong>
+      <span>Juntas y espesores típicos de obra</span>
+    </div>
+    <div class="trust-item">
+      <strong>Desperdicio incluido</strong>
+      <span>Ajustable entre 0% y 20%</span>
+    </div>
+    <div class="trust-item">
+      <strong>Precios en soles</strong>
+      <span>Compras en Perú, sin conversiones</span>
+    </div>
+  </section>
+
+  <section class="container explain">
+    <div class="panel">
+      <h2>Comprar sin quedarte corto</h2>
+      <p>
+        La mayoría de errores en una obra no son de cálculo: son de compra. Se pide de menos y se
+        pierde un día, o se pide de más y sobra material que no se puede devolver.
+      </p>
+      <p>
+        Estas calculadoras usan las dimensiones comerciales de los materiales y los rendimientos
+        típicos de la construcción en Perú. Puedes ajustar el desperdicio según tu obra.
+      </p>
+      <h2>Qué puedes calcular</h2>
+      <ul>
+        <li><strong>Ladrillos:</strong> King Kong, pandereta y bloques de concreto.</li>
+        <li><strong>Cemento:</strong> bolsas, arena, piedra y agua por m³ de concreto.</li>
+        <li><strong>Pintura:</strong> litros y galones por área y número de manos.</li>
+        <li><strong>Losetas:</strong> unidades y cajas de cerámica o porcelanato.</li>
+      </ul>
+    </div>
+    <aside class="panel">
+      <h2>Antes de comprar</h2>
+      <p>
+        Los resultados son referenciales. El rendimiento real depende del espesor de la junta, la
+        calidad del material, la superficie y la mano de obra.
+      </p>
+      <p>
+        Para una obra grande, contrasta con tu maestro de obra o con el expediente técnico. Un
+        5% de diferencia en el metrado puede cambiar el presupuesto.
+      </p>
+      <p class="hint">
+        Este sitio se financia con publicidad. Los anuncios se marcan como tales y nunca ocultan el
+        resultado de tu cálculo.
+      </p>
+    </aside>
+  </section>
+
+  <script is:inline>
+    (() => {
+      const area = document.getElementById('q-area');
+      const manos = document.getElementById('q-manos');
+      const galones = document.getElementById('q-galones');
+      const litros = document.getElementById('q-litros');
+
+      const calcular = () => {
+        const a = Math.max(0, parseFloat(area.value) || 0);
+        const m = parseInt(manos.value, 10) || 1;
+        const l = (a * m / 10) * 1.05;
+        galones.textContent = (l / 3.785).toFixed(2) + ' galones';
+        litros.textContent = l.toFixed(2) + ' litros · rendimiento 10 m²/L por mano';
+      };
+
+      area.addEventListener('input', calcular);
+      manos.addEventListener('change', calcular);
+      calcular();
+
+      const grid = document.getElementById('calc-grid');
+      const cards = [...grid.querySelectorAll('.card')];
+      const search = document.getElementById('calc-search');
+      const chips = [...document.querySelectorAll('.filter')];
+      const count = document.getElementById('search-count');
+      const empty = document.getElementById('calc-empty');
+      let cat = 'todas';
+
+      const aplicar = () => {
+        const q = search.value.trim().toLowerCase();
+        let visibles = 0;
+        for (const card of cards) {
+          const coincideTexto = !q || card.dataset.name.includes(q);
+          const coincideCat = cat === 'todas' || card.dataset.cat === cat;
+          const mostrar = coincideTexto && coincideCat;
+          card.hidden = !mostrar;
+          if (mostrar) visibles++;
+        }
+        empty.hidden = visibles > 0;
+        count.textContent = visibles === 1 ? '1 calculadora disponible' : visibles + ' calculadoras disponibles';
+      };
+
+      search.addEventListener('input', aplicar);
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          cat = chip.dataset.filter;
+          chips.forEach((c) => {
+            c.classList.toggle('is-active', c === chip);
+            c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+          });
+          aplicar();
+        });
+      });
+      chips.forEach((c) => c.setAttribute('aria-pressed', c.classList.contains('is-active') ? 'true' : 'false'));
+    })();
+  </script>
+</Base>
