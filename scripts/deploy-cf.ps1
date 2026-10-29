@@ -1,12 +1,12 @@
-# Deploy a Cloudflare Pages con base raíz y canonical de pages.dev
+# Deploy a Cloudflare (Workers con assets estaticos, ex Pages)
 $ErrorActionPreference = "Stop"
 $env:BASE_PATH = "/"
-$env:SITE_URL = "https://calcula-obra.pages.dev"
+$env:SITE_URL = "https://calcula-obra.calcula-obra.workers.dev"
 try {
   npm run build
-  if ($LASTEXITCODE -ne 0) { throw "astro build falló" }
-  wrangler pages deploy dist --project-name calcula-obra --branch main
-  if ($LASTEXITCODE -ne 0) { throw "wrangler pages deploy falló" }
+  if ($LASTEXITCODE -ne 0) { throw "astro build fallo" }
+  npx wrangler deploy --config wrangler.assets.jsonc
+  if ($LASTEXITCODE -ne 0) { throw "wrangler deploy fallo" }
 } finally {
   Remove-Item Env:BASE_PATH, Env:SITE_URL -ErrorAction SilentlyContinue
 }

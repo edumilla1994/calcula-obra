@@ -39,25 +39,27 @@ La conclusión de esa sesión fue:
 
 ## Estado actual
 
-- Proyecto creado y con dependencias por instalar (`npm install`).
+- **GitHub Pages:** https://edumilla1994.github.io/calcula-obra/
+- **Cloudflare (Workers + assets):** https://calcula-obra.calcula-obra.workers.dev/
+- **Repo:** https://github.com/edumilla1994/calcula-obra
 - Home con calculadora rápida de pintura, buscador y filtros.
-- 4 calculadoras funcionando.
+- 4 calculadoras funcionando y resultado visible al entrar.
 - Páginas legales: sobre, privacidad y contacto.
 - Componentes de AdSense y consentimiento copiados y adaptados.
-- **Pendiente:** instalar, compilar, probar y desplegar.
+- 5/5 pruebas E2E pasan en ambas URLs, sin errores JS.
+
+Nota: Cloudflare migró Pages a Workers. El deploy usa `wrangler deploy` con `wrangler.assets.jsonc`
+(assets estáticos), no `wrangler pages deploy`.
 
 ## Siguientes pasos, en orden
 
-1. `npm install` y `npm run build` en esta carpeta.
-2. Correr `npm run test:e2e` (ajustar la ruta de Chromium en `e2e.mjs` si hace falta).
-3. Crear el repo `calcula-obra` en GitHub y desplegar con `npm run deploy`.
-4. Crear el proyecto en Cloudflare Pages y desplegar con `npm run deploy:cf`.
-5. Crear la propiedad en Search Console y enviar el sitemap.
-6. Sumar 20–30 páginas de ejemplos por medida (`/ejemplos/ladrillos-20/`, `/ejemplos/pintura-40/`,
+1. Crear la propiedad en Search Console y verificar con etiqueta HTML o archivo.
+2. Enviar el sitemap: `https://edumilla1994.github.io/calcula-obra/sitemap-index.xml`.
+3. Sumar 20–30 páginas de ejemplos por medida (`/ejemplos/ladrillos-20/`, `/ejemplos/pintura-40/`,
    etc.) con el mismo patrón de Calcula Perú.
-7. Sumar las calculadoras que faltan: drywall, mortero, arena y piedra, presupuesto de obra.
-8. Evaluar afiliados de ferreterías y una plantilla digital de presupuesto.
-9. Recién entonces: dominio propio y AdSense.
+4. Sumar las calculadoras que faltan: drywall, mortero, arena y piedra, presupuesto de obra.
+5. Evaluar afiliados de ferreterías y una plantilla digital de presupuesto.
+6. Recién entonces: dominio propio y AdSense.
 
 ## Cómo trabajar
 

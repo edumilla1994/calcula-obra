@@ -3,7 +3,8 @@
 Calculadoras de materiales de construcción para Perú. Sitio estático, sin backend y sin registro.
 
 - **Stack:** Astro 7 + TypeScript, CSS propio.
-- **Deploy:** GitHub Pages (`/calcula-obra/`) y Cloudflare Pages (`calcula-obra.pages.dev`).
+- **GitHub Pages:** https://edumilla1994.github.io/calcula-obra/
+- **Cloudflare:** https://calcula-obra.calcula-obra.workers.dev/
 - **Cálculos:** en el navegador, con rendimientos típicos de obra.
 
 ## Calculadoras
